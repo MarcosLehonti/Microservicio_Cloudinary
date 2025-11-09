@@ -1,0 +1,38 @@
+conectar con la base de datos pg
+email de cloudinary: canonmauricio63@gmail.canonmauricio6
+password: Marcos202507#
+
+
+
+-----------------------------------------------------------------
+El graph guarda la ulr que devuelve cloudinary en la base de datos junto con el id del paciente
+
+-----------------------------------------------------------------
+prueb a en postman para hacer un post (subir imagen):
+
+
+HACER UN POST A : http://localhost:4000/graphql
+
+HEADRES: Content-Type 
+         multipart/form-data
+BODY -> FORM DATA 
+        operations : 
+        { "query": "mutation($file: Upload!, $patientId: Int!) { uploadFile(file: $file, patientId: $patientId) { message document { id fileUrl } } }", "variables": { "file": null, "patientId": 1 } }
+        map:
+        { "0": ["variables.file"] }
+        0 :
+        ??elijes una imagen de tu pc (este parametro sera de tipo file y opertaions t map de tipo text)
+
+
+ejemplo de respuest ade psotman: 
+{
+    "data": {
+        "uploadFile": {
+            "message": "✅ Archivo subido correctamente",
+            "document": {
+                "id": "1",
+                "fileUrl": "https://res.cloudinary.com/dqgeb7f5w/image/upload/v1762188339/lc43wt3pg0aw665bfpre.jpg"
+            }
+        }
+    }
+}
