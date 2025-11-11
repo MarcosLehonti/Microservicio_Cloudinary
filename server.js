@@ -15,7 +15,7 @@ const app = express();
 // ✅ CORS: permitir tu frontend o cualquier origen
 app.use(
   cors({
-    origin: "*", // Cambia esto a tu dominio en producción
+    origin:["http://localhost:4200"], // Cambia esto a tu dominio en producción
     credentials: true,
   })
 );
