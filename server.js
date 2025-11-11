@@ -5,56 +5,59 @@ import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { typeDefs } from "./graphql/schema.js";
 import { resolvers } from "./graphql/resolvers.js";
-import connectDB from "./config/db.js"; // 🔹 Importa conexión MongoDB
+import connectDB from "./config/db.js";
 import { graphqlUploadExpress } from "graphql-upload-minimal";
 
 dotenv.config();
 
 const app = express();
 
-// ✅ CORS: permitir tu frontend o cualquier origen
-app.use(
-  cors({
-    origin:["http://localhost:4200"], // Cambia esto a tu dominio en producción
-    credentials: true,
-  })
-);
-
-// ✅ Middleware necesario
+// ✅ Middleware global (por si usas otras rutas)
 app.use(express.json());
 app.use(graphqlUploadExpress());
 
-// ✅ Inicializar Apollo Server con csrfPrevention deshabilitado
+// ✅ Inicializar Apollo Server
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  csrfPrevention: false, // <---- AQUÍ es donde realmente se desactiva
-  introspection: true, // permite probar desde Postman o Apollo Sandbox
+  csrfPrevention: false, // permite uploads y evita problemas con CORS
+  introspection: true, // habilita el playground o pruebas con Postman
 });
 
 await server.start();
 
-// ✅ Middleware de Apollo Server
+// ✅ Aplicar CORS directamente sobre la ruta /graphql
 app.use(
   "/graphql",
+  cors({
+    origin: [
+      "http://localhost:4200", // frontend local
+      "https://microservicio-cloudinary.onrender.com", // backend Render
+      // 👉 si luego despliegas tu frontend, agrégalo aquí también
+      // "https://tu-frontend-en-vercel.app"
+    ],
+    credentials: true,
+  }),
+  express.json(),
   expressMiddleware(server, {
     context: async ({ req }) => ({ token: req.headers.authorization }),
   })
 );
 
+// ✅ Ruta base para verificar el servidor
 app.get("/", (req, res) => {
   res.send("🚀 Servidor GraphQL con MongoDB y Cloudinary funcionando ✅");
 });
 
-// 🔹 Conexión a MongoDB
+// 🔹 Conectar a MongoDB
 try {
-  await connectDB(); // 🔹 Conexión usando Mongoose
+  await connectDB();
   console.log("✅ Conexión a MongoDB establecida correctamente.");
 } catch (error) {
   console.error("❌ Error al conectar a MongoDB:", error);
 }
 
-// 🔹 Levantar servidor
+// 🔹 Iniciar servidor en el puerto asignado por Render
 const PORT = process.env.PORT || 4003;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor GraphQL ejecutándose en http://localhost:${PORT}/graphql`);
