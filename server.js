@@ -33,6 +33,8 @@ app.use(
     origin: [
       "http://localhost:4200", // frontend local
       "https://microservicio-cloudinary.onrender.com", // backend Render
+      "https://microservicio-cloudinary.onrender.com", // backend Render (su propio dominio)
+
       // 👉 si luego despliegas tu frontend, agrégalo aquí también
       // "https://tu-frontend-en-vercel.app"
     ],
