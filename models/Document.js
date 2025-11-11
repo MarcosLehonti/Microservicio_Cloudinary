@@ -1,28 +1,24 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../config/db.js";
+// models/Document.js
+import mongoose from "mongoose";
 
-const Document = sequelize.define("Document", {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
-  },
+const documentSchema = new mongoose.Schema({
   patientId: {
-    type: DataTypes.INTEGER,
-    allowNull: false
+    type: Number,
+    required: true,
   },
   fileUrl: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: String,
+    required: true,
   },
   fileType: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: String,
+    required: true,
   },
   createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
-  }
+    type: Date,
+    default: Date.now,
+  },
 });
 
+const Document = mongoose.model("Document", documentSchema);
 export default Document;

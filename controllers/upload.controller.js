@@ -1,3 +1,4 @@
+// controllers/upload.controller.js
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
 import Document from "../models/Document.js";
@@ -46,8 +47,8 @@ export const uploadFileController = async (file, patientId) => {
 
 export const getFilesByPatientIdController = async (patientId) => {
   try {
-    const documents = await Document.findAll({ where: { patientId } });
-    if (documents.length === 0) {
+    const documents = await Document.find({ patientId });
+    if (!documents.length) {
       throw new Error("No se encontraron archivos para este paciente");
     }
     return documents;

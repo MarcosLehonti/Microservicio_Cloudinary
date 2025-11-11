@@ -5,7 +5,7 @@ import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { typeDefs } from "./graphql/schema.js";
 import { resolvers } from "./graphql/resolvers.js";
-import sequelize from "./config/db.js";
+import connectDB from "./config/db.js"; // 🔹 Importa conexión MongoDB
 import { graphqlUploadExpress } from "graphql-upload-minimal";
 
 dotenv.config();
@@ -43,20 +43,19 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.send("🚀 Servidor GraphQL con PostgreSQL y Cloudinary funcionando ✅");
+  res.send("🚀 Servidor GraphQL con MongoDB y Cloudinary funcionando ✅");
 });
 
-// 🔹 Conexión y sincronización DB
+// 🔹 Conexión a MongoDB
 try {
-  await sequelize.authenticate();
-  await sequelize.sync({ alter: true });
-  console.log("✅ Conexión a la base de datos establecida correctamente.");
+  await connectDB(); // 🔹 Conexión usando Mongoose
+  console.log("✅ Conexión a MongoDB establecida correctamente.");
 } catch (error) {
-  console.error("❌ Error al conectar a la base de datos:", error);
+  console.error("❌ Error al conectar a MongoDB:", error);
 }
 
 // 🔹 Levantar servidor
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4003;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor GraphQL ejecutándose en http://localhost:${PORT}/graphql`);
 });
