@@ -32,6 +32,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:4200", // frontend local
+
+      "https://fornted-historial-clinico-sofware2.vercel.app",
       "https://microservicio-cloudinary.onrender.com", // backend Render
       "https://microservicio-cloudinary.onrender.com", // backend Render (su propio dominio)
 
